@@ -9,7 +9,18 @@ async function run() {
 
   let payload = github.context.payload
 
-  let repoOwner = payload.repository.owner.name
+  //
+  // In "push" actions, we get:
+  //
+  //   "owner": { "name": "..." }
+  //
+  // In "pull_request" actions, we get:
+  //
+  //   "owner": { "login": "..." }
+  //
+  // Go figure.
+  //
+  let repoOwner = payload.repository.owner.name || payload.repository.owner.login
     , repoName = payload.repository.name
 
   let octokit = new github.GitHub(githubToken)
